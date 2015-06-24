@@ -1,3 +1,4 @@
+'use strict';
 /*-------------------------------------------------------------------------------------------
 Thanks to Erik Kay and Mike Belshe from the Google Chrome engineering team who originally
 wrote the below sorting test. This test is a great way to experience the patterns across
@@ -17,8 +18,8 @@ We made a few minor changes to showcase the proposed setImmediate API benefits.
    9) Changed the color scheme and styles of the test to match the IE TestDrive theme.
 ----------------------------------------------------------------------------------------------*/
 var sort, initializePage;
-(function (global, undefined) {
-'use strict';
+//(function (global, undefined) {
+//'use strict';
 // Sort Object
 var manual = 0, size = 250,
   query = window.location.search.substring(1),
@@ -378,4 +379,4 @@ initializePage = function initializePage() {
   sort = new Sort('TestGraph', 0, sort_quick);
   sort.init();
 }
-})(function(){return this||(1,eval)('this');}());
+//})(function(){return this||(1,eval)('this');}());
