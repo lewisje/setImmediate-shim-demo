@@ -318,7 +318,7 @@ function partition_step(sort, left, right, pivot, i, j) {
 }
 // Simple User Agent Detection
 var UA = navigator.userAgent.toLowerCase(), index = -1, browserCheck = 'UN',
-  browserName = 'Unknown', browserVersion = '0', browserTransformDOM = '',
+  browserName = 'Unknown', browserVersion = '0', browserTransformDOM = 'transform',
   browserTransformCSS = '', browserSupportsSetImmediate = false;
 function getBrowser() {
   if (UA.indexOf('msie') > -1) {
@@ -354,11 +354,11 @@ function getBrowser() {
     browserTransformCSS = '-moz-transform';
     browserSupportsSetImmediate = 'MozSetImmediate' in window ? true : false;
   } else if (UA.indexOf('opera') > -1) {
+    index = UA.indexOf('opera');
+    if (UA.indexOf('version') > -1) index = UA.indexOf('rsion');
     browserCheck = 'Opera';
     browserName = 'Opera';
-    browserVersion = '';
-    browserTransformDOM = 'OTransform';
-    browserTransformCSS = '-o-transform';
+    browserVersion = '' + parseFloat('' + UA.substring(index + 6));
     browserSupportsSetImmediate = 'OSetImmediate' in window ? true : false;
   } else if (UA.indexOf('safari') > -1) {
     index = UA.indexOf('safari');
