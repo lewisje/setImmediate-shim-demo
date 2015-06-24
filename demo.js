@@ -372,9 +372,11 @@ function getBrowser() {
   if (!browserSupportsSetImmediate && 'setImmediate' in window) browserSupportsSetImmediate = true;
 }
 // Test Infrastructure
-function InitializePage() {
+function initializePage() {
   getBrowser();
   sort = new Sort('TestGraph', 0, sort_quick);
   sort.init();
 }
+global.sort = sort;
+global.initializePage = initializePage;
 })(function(){return this||(1,eval)('this');}());
