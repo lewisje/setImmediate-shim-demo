@@ -378,8 +378,8 @@ initializePage = function initializePage() {
   sort = new Sort('TestGraph', 0, sort_quick);
   sort.init();
 }
-})(function(){return this||(1,eval)('this');}());
-(document.body || document.getElementsByTagName('body')[0]).onload = initializePage;
+})(window);
+window.onload = initializePage;
 document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
 document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
 document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
