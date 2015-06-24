@@ -408,9 +408,9 @@ function initializePage() {
   getBrowser();
   sort = new Sort('TestGraph', 0, sort_quick);
   sort.init();
+  document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
+  document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
+  document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
 }
 global.onload = initializePage;
-document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
-document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
-document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
 })(window);
