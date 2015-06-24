@@ -1,87 +1,169 @@
-﻿*
-{
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
+/*! normalize.css v1.1.3 with backports from v3.0.3 | MIT License | git.io/normalize */
+@-ms-viewport {
+  width: device-width;
 }
-
-HTML
-{
-    height: 100%;
+@viewport {
+  width: device-width;
+  zoom: 1;
 }
-
-body
-{
-    font-family: 'Segoe UI' , Verdana, Helvetica, Sans-Serif;
-    font-size: 10pt;
-    height: 100%;
-    background-color: white;
-    color: #424242;
+body {
+  margin: 0;
+  -moz-font-feature-settings: "liga=1, dlig=1";
+  -moz-font-feature-settings: "liga", "dlig"; /* EDIT: new syntax for FF 15+ */
+  -webkit-font-feature-settings: "liga", "dlig";
+  font-feature-settings: "liga", "dlig";
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
 }
-
-p
-{
-    padding: 0px 0px 10pt 0px;
+[hidden],
+template {
+  display: none;
 }
-
-a
-{
-    text-decoration: none;
+html {
+  font-size: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
-
-a, a:visited, a:hover
-{
-    color: #00a3ef;
+html, button, input, select, textarea {
+  font-family: sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", Symbola, EmojiSymbols, "Android Emoji";
 }
-
-a:hover, a:visited:hover
-{
-    color: #00a3ef;
-    text-decoration: underline;
+a:focus {
+  outline: thin dotted;
 }
-
-.bold
-{
-    font-family: 'Segoe UI Semibold';
+a {
+  background-color: transparent;
 }
-
-body
-{
-    position: relative;
-    margin: 0px auto 0px auto;
-    min-width: 960px;
-    max-width: 1080px;
-    padding: 0px 40px 0px 40px;
+a:active, a:hover {
+  outline: 0;
 }
-
-#DemoScreenreaderText
-{
-    position: absolute;
-    left: -10000px;
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
 }
-
-#DemoTitle
-{
-    padding: 40px 0px 0px 0px;
-    font-size: 24pt;
-    font-weight: normal;
-    color: #00a3ef;
+h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
 }
-
-#DemoIntroduction
-{
-    margin: 40px 0px 0px 0px;
+h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
 }
-
-#DemoContent
-{
-    margin: 30px 0px 0px 0px;
+h4 {
+  font-size: 1em;
+  margin: 1.33em 0;
 }
-
-#DemoDetails
-{
-    margin: 30px 0px 0px 0px;
+h5 {
+  font-size: 0.83em;
+  margin: 1.67em 0;
 }
-
+h6 {
+  font-size: 0.67em;
+  margin: 2.33em 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b, strong {
+  font-weight: bold;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+p, pre {
+  margin: 1em 0;
+}
+dl, menu, ol, ul {
+  margin: 1em 0;
+}
+menu, ol, ul {
+  padding: 0 0 0 40px;
+}
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+form {
+  margin: 0;
+}
+button, input, optgroup, select, textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  vertical-align: baseline;
+  *vertical-align: middle;
+}
+button {
+  overflow: visible;
+}
+button, select {
+  text-transform: none;
+}
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  *overflow: visible;
+}
+button[disabled], html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner, input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+/* site-specific styles */
+html {
+  height: 100%;
+}
+body {
+  font-family: 'Segoe UI', Verdana, Helvetica, sans-serif;
+  font-size: 10pt;
+  height: 100%;
+  background-color: white;
+  color: #424242;
+  position: relative;
+  margin: 0 auto;
+  min-width: 960px;
+  max-width: 1080px;
+  padding: 0 40px;
+}
+p {
+  padding: 0 0 10pt;
+}
+a {
+  text-decoration: none;
+}
+a, a:visited, a:hover {
+  color: #00a3ef;
+}
+a:hover, a:visited:hover {
+  color: #00a3ef;
+  text-decoration: underline;
+}
+.bold {
+  font-family: 'Segoe UI Semibold';
+}
+#DemoScreenreaderText {
+  position: absolute;
+  left: -10000px;
+}
+#DemoTitle {
+  padding: 40px 0px 0px 0px;
+  font-size: 24pt;
+  font-weight: normal;
+  color: #00a3ef;
+}
+#DemoIntroduction {
+  margin: 40px 0 0;
+}
+#DemoContent {
+  margin: 30px 0 0;
+}
+#DemoDetails {
+    margin: 30px 0 0;
+}
 #TestGraph {
   display: inline-block;
   position: relative;
@@ -90,7 +172,6 @@ body
   margin-top: 80px;
   margin-bottom: 40px;
 }
-
 .bar {
   position: absolute;
   bottom: 0px;
@@ -100,61 +181,46 @@ body
   z-index: 2;
   border-bottom: 0px;
   background: green;
-  border-radius: 3px 3px 3px 3px;
+  border-radius: 3px;
 }
-
 .button {
   border: 1px dashed silver;
   padding: 2px;
   margin: 2px;
   display: inline;
 }
-
 .button:hover {
   text-decoration:underline;
   cursor: pointer;
   background-color: silver;
 }
-
 div.result {
   font-size: 48px;
   color: yellow;
 }
-
-#TestWrapper
-{
-    text-align: center;
+#TestWrapper {
+  text-align: center;
 }
-
-#TestContainer
-{
-    display: inline-block;
-    margin-bottom: 20px;
+#TestContainer {
+  display: inline-block;
+  margin-bottom: 20px;
 }
-
-.TestControlSet
-{
-    float: left;
-    width: 260px;
-    margin-right: 20px;
-    margin-bottom: 20px;
-    text-align: left;
+.TestControlSet {
+  float: left;
+  width: 260px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  text-align: left;
 }
-
-.TestTitle
-{
-    font-weight: bold;
+.TestTitle {
+  font-weight: bold;
 }
-
-.TestResults
-{
-    padding-top: 4px;
-    padding-bottom: 4px;
+.TestResults {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
-
-.TestButton
-{
-    width: 140px;
-    padding: 2px;
-    margin-top: 6px;
+.TestButton {
+  width: 140px;
+  padding: 2px;
+  margin-top: 6px;
 }
