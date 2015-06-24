@@ -1,23 +1,6 @@
 ;(function (global, undefined) {
 'use strict';
-if (!noNative && (global.msSetImmediate || global.setImmediate)) {
-  if (!global.setImmediate) {
-    global.setImmediate = global.msSetImmediate;
-    global.clearImmediate = global.msClearImmediate;
-  }
-  return;
-}
-var doc = global.document,
-  slice = Array.prototype.slice,
-  toString = Object.prototype.toString,
-  noNative = notUseNative(),
-  timer = {
-    polyfill: {},
-    nextId: 1,
-    tasks: {},
-    lock: false
-  },
-  polyfill;
+var noNative, doc, slice, toString, timer, polyfill;
 // See http://codeforhire.com/2013/09/21/setimmediate-and-messagechannel-broken-on-internet-explorer-10/
 function notUseNative() {
   return global.navigator && /Trident/.test(global.navigator.userAgent);
@@ -31,7 +14,7 @@ function functionize(func, arg) {
     case 'function':
       return func;
     default:
-      return function(){return func;};
+      return function () {return func;};
   }
 }
 // The first argument to the toCatch callback is the caught error;
@@ -44,6 +27,18 @@ function trial(toTry, toCatch, toFinal) {
   catch (e) {catch1(e);}
   finally {final1();}
 }
+noNative = notUseNative();
+if (!noNative && (global.msSetImmediate || global.setImmediate)) {
+  if (!global.setImmediate) {
+    global.setImmediate = global.msSetImmediate;
+    global.clearImmediate = global.msClearImmediate;
+  }
+  return;
+}
+doc = global.document;
+slice = Array.prototype.slice;
+toString = Object.prototype.toString;
+timer = {polyfill: {}, nextId: 1, tasks: {}, lock: false};
 timer.run = function (handleId) {
   var task;
   if (timer.lock) global.setTimeout(timer.wrap(timer.run, handleId), 0);
