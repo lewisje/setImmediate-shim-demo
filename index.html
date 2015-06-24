@@ -10,7 +10,7 @@
   <title>setImmediate API demo</title>
   <link rel="stylesheet" type="text/css" href="demo.css">
 </head>
-<body onload="initializePage();">
+<body>
   <h1 id="DemoTitle">setImmediate API demo</h1>
   <div id="DemoScreenreaderText">Screen-Reader Text Goes Here</div>
   <div id="DemoContent">
@@ -271,17 +271,17 @@
         <div class="TestControlSet">
           <div class="TestTitle">HTML4 (~15ms Timers)</div>
           <div class="TestResults" id="HTML4TestResuts"></div>
-          <input class="TestButton" type="submit" value="Run Test" onclick="sort.startSetTimeout15();">
+          <input class="TestButton" id="HTML4TestButton" type="submit" value="Run Test">
         </div>
         <div class="TestControlSet">
           <div class="TestTitle">HTML5 (4ms Timers)</div>
           <div class="TestResults" id="HTML5TestResults"></div>
-          <input class="TestButton" type="submit" value="Run Test" onclick="sort.startSetTimeout0();">
+          <input class="TestButton" id="HTML5TestButton" type="submit" value="Run Test">
         </div>
         <div class="TestControlSet">
           <div class="TestTitle">setImmediate</div>
           <div class="TestResults" id="setImmediateTestResults"></div>
-          <input class="TestButton" id="setImmediateTestButton" type="submit" value="Run Test" onclick="sort.startSetImmediate();">
+          <input class="TestButton" id="setImmediateTestButton" type="submit" value="Run Test">
         </div>
       </div>
     </div>
