@@ -16,6 +16,38 @@ We made a few minor changes to showcase the proposed setImmediate API benefits.
    8) Randomly generate during page load and then reuse the same array for all three tests.
    9) Changed the color scheme and styles of the test to match the IE TestDrive theme.
 ----------------------------------------------------------------------------------------------*/
+// http://snook.ca/archives/javascript/your_favourite_1
+// The two functions below seem to be the most complete (cross-browser) solution.
+// document.all is equivalent to getElementsByTagName of IE 5
+if (document.all && (!('getElementsByTagName' in document) || typeof document.getElementsByTagName !== 'function')) {
+  document.getElementsByTagName = function (nodeName) {
+    'use strict';
+    var result, rightName, dal, i;
+    if (nodeName === '*') return document.all;
+    result = [];
+    rightName = new RegExp(nodeName, 'i');
+    dal = document.all.length;
+    for (i = dal; i--;) if (rightName.test(document.all[i].nodeName)) result.push(document.all[i]);
+    return result;
+  };
+}
+if (!('getElementsByClassName' in document) || typeof document.getElementsByClassName !== 'function') { 
+  document.getElementsByClassName = function (className, nodeName) {
+    'use strict';
+    var result = [], tag = nodeName || '*', rightClass, node, seek, sl, i;
+    if (document.evaluate) {
+      seek = '//' + tag + '[@class="' + className + '"]';
+      seek = document.evaluate(seek, document, null, 0, null);
+      while (node = seek.iterateNext()) result.push(node);
+    } else {
+      rightClass = new RegExp('(^| )' + className + '( |$)');
+      seek = document.getElementsByTagName(tag);
+      sl = seek.length;
+      for (i = sl; i--;) if (rightClass.test((node = seek[i]).className)) result.push(seek[i]);
+    }
+    return result;
+  };
+}
 (function (global, undefined) {
 'use strict';
 // Sort Object
