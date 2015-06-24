@@ -16,7 +16,6 @@ We made a few minor changes to showcase the proposed setImmediate API benefits.
    8) Randomly generate during page load and then reuse the same array for all three tests.
    9) Changed the color scheme and styles of the test to match the IE TestDrive theme.
 ----------------------------------------------------------------------------------------------*/
-var sort, initializePage;
 (function (global, undefined) {
 'use strict';
 // Sort Object
@@ -373,13 +372,13 @@ function getBrowser() {
   if (!browserSupportsSetImmediate && 'setImmediate' in window) browserSupportsSetImmediate = true;
 }
 // Test Infrastructure
-initializePage = function initializePage() {
+function initializePage() {
   getBrowser();
   sort = new Sort('TestGraph', 0, sort_quick);
   sort.init();
 }
-})(window);
-window.onload = initializePage;
+global.onload = initializePage;
 document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
 document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
 document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
+})(window);
