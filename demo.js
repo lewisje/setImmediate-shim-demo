@@ -19,7 +19,7 @@ We made a few minor changes to showcase the proposed setImmediate API benefits.
 (function (global, undefined) {
 'use strict';
 // Sort Object
-var manual = 0, size = 250,
+var sort, manual = 0, size = 250,
   query = window.location.search.substring(1),
   params = query.split('&'), pl = params.length;
 for (var i = 0; i < pl; i++) {
