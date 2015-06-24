@@ -135,14 +135,13 @@ function canUsePostMessage() {
     return asynch;
   }
 }
-if (noNative) polyfill = 'setTimeout';
 // Don't get fooled by e.g. browserify environments.
 // For Node.js before 0.9
-else if (toString.call(global.process) === '[object process]') polyfill = 'nextTick';
+if (toString.call(global.process) === '[object process]') polyfill = 'nextTick';
 // For non-IE10 modern browsers
 else if (canUsePostMessage()) polyfill = 'postMessage';
 // For web workers, where supported
-else if (global.MessageChannel) polyfill = 'messageChannel';
+else if (!noNative && global.MessageChannel) polyfill = 'messageChannel';
 // For IE 6–8
 else if (doc && ('onreadystatechange' in doc.createElement('script'))) polyfill = 'readyStateChange';
 // For older browsers
