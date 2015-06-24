@@ -379,3 +379,7 @@ initializePage = function initializePage() {
   sort.init();
 }
 })(function(){return this||(1,eval)('this');}());
+(document.body || document.getElementsByTagName('body')[0]).onload = initializePage;
+document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
+document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
+document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
