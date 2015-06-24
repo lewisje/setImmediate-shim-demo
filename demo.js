@@ -178,7 +178,7 @@ Sort.prototype.startSetImmediate = function () {
   this.powerConsumption = '<span style="color:green;">Low</span>';
   this.CPUEfficency = '<span style="color:green;">High</span>';
   this.reset();
-  if (browserSupportsSetImmediate === false){
+  if (browserSupportsSetImmediate === false) {
     document.getElementById('setImmediateTestButton').disabled = true;
     document.getElementById('setImmediateTestResults').innerHTML = '<span>Your browser does not currently support the setImmediate API, an emerging specification in the <a href="http://www.w3.org/2010/webperf/" target="_blank">W3C Web Performance Working Group</a>.</span>';
   }
@@ -407,10 +407,10 @@ function getBrowser() {
 function initializePage() {
   getBrowser();
   sort = new Sort('TestGraph', 0, sort_quick);
+  document.getElementById('HTML4TestButton').onclick = function () {sort.startSetTimeout15();};
+  document.getElementById('HTML5TestButton').onclick = function () {sort.startSetTimeout0();};
+  document.getElementById('setImmediateTestButton').onclick = function () {sort.startSetImmediate();};
   sort.init();
-  document.getElementById('HTML4TestButton').onclick = sort.startSetTimeout15;
-  document.getElementById('HTML5TestButton').onclick = sort.startSetTimeout0;
-  document.getElementById('setImmediateTestButton').onclick = sort.startSetImmediate;
 }
 global.onload = initializePage;
 })(window);
