@@ -19,7 +19,9 @@ We made a few minor changes to showcase the proposed setImmediate API benefits.
 // http://snook.ca/archives/javascript/your_favourite_1
 // The two functions below seem to be the most complete (cross-browser) solution.
 // document.all is equivalent to getElementsByTagName of IE 5
-if (document.all && (!('getElementsByTagName' in document) || typeof document.getElementsByTagName !== 'function')) {
+if (document.all && (!('getElementsByTagName' in document) ||
+     (typeof document.getElementsByTagName !== 'function' &&
+       (typeof document.getElementsByTagName !== 'object' || !document.getElementsByTagName)))) {
   document.getElementsByTagName = function (nodeName) {
     'use strict';
     var result, rightName, dal, i;
@@ -31,11 +33,13 @@ if (document.all && (!('getElementsByTagName' in document) || typeof document.ge
     return result;
   };
 }
-if (!('getElementsByClassName' in document) || typeof document.getElementsByClassName !== 'function') { 
+if (!('getElementsByClassName' in document) || (typeof document.getElementsByClassName !== 'function' &&
+      (typeof document.getElementsByClassName !== object || !document.getElementsByClassName))) { 
   document.getElementsByClassName = function (className, nodeName) {
     'use strict';
     var result = [], tag = nodeName || '*', rightClass, node, seek, sl, i;
-    if (document.evaluate) {
+    if ('evaluate' in document && (typeof document.evaluate === 'function' ||
+         (typeof document.evaluate === 'object' && document.evaluate))) {
       seek = '//' + tag + '[@class="' + className + '"]';
       seek = document.evaluate(seek, document, null, 0, null);
       while (node = seek.iterateNext()) result.push(node);
