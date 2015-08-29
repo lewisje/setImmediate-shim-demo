@@ -200,11 +200,11 @@ if (toString.call(global.process) === '[object process]') polyfill = 'nextTick';
 else if (canUsePostMessage()) polyfill = 'postMessage';
 // For web workers, where supported
 else if (!noNative && 'MessageChannel' in global) polyfill = 'messageChannel';
-// For IE11, probably
+// not sure what environment uses this
 else if (Mutation) polyfill = 'mutation';
-// For IE 6-8, maybe older browsers
-else if (doc && hasMethod(global, 'Image')) polyfill = 'image';
-// For IE 6–8, in case image doesn't work
+// For IE 8, maybe older browsers
+else if (doc && hasMethod(global, 'Image') && typeof console !== 'undefined') polyfill = 'image';
+// For IE 6–7, in case image doesn't work
 else if (doc && 'onreadystatechange' in doc.createElement('script')) polyfill = 'readyStateChange';
 // For older browsers
 else polyfill = 'setTimeout';
