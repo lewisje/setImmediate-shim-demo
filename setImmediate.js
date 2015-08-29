@@ -14,15 +14,15 @@ if (!defProps) { // simple implementation of Object.defineProperty
     else if ('get' in attr) obj[key] = attr['get'].call(obj);
   };
 }
-function defineEnumData(obj, key, val) {
-  defineProperty(obj, key, {value: val, enumerable: true, configurable: true, writable: true});
+function defineConst(obj, key, val) {
+  defineProperty(obj, key, {value: val});
 }
 function defineMethod(obj, key, func) {
   defineProperty(obj, key, {value: func, configurable: true, writable: true});
 }
 function isCallable(fn) {
   return typeof fn === 'function' || toString.call(fn) === '[object Function]' ||
-    typeof fn === 'unknown' || false; // 'unknown' means callable ActiveX in IE<9
+    typeof fn === 'unknown' || (fn && typeof fn === 'object') || false; // 'unknown' means callable ActiveX in IE<9
 }
 function hasMethod(obj, key) {
   return key in obj && isCallable(obj[key]);
@@ -211,7 +211,7 @@ else polyfill = 'setTimeout';
 var attachTo = hasMethod(Object, 'getPrototypeOf') && Object.getPrototypeOf(global);
 attachTo = attachTo && hasMethod(attachTo, 'setTimeout') ? attachTo : global;
 defineMethod(attachTo, 'setImmediate', timer.polyfill[polyfill]());
-defineEnumData(attachTo.setImmediate, 'usepolyfill', polyfill);
+defineConst(attachTo.setImmediate, 'usepolyfill', polyfill);
 defineMethod(attachTo, 'msSetImmediate', attachTo.setImmediate);
 defineMethod(attachTo, 'clearImmediate', timer.clear);
 defineMethod(attachTo, 'msClearImmediate', attachTo.clearImmediate);
