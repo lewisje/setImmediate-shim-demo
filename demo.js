@@ -415,6 +415,8 @@ function initializePage() {
   document.getElementById('HTML5TestButton').onclick = function () {sort.startSetTimeout0();};
   document.getElementById('setImmediateTestButton').onclick = function () {sort.startSetImmediate();};
   sort.init();
+  if ('setImmediate' in window && 'usepolyfill' in setImmediate)
+    document.getElementById('polyfill').innerHTML = 'This browser is using the ' + setImmediate.usepolyfill + ' polyfill.';
 }
 global.onload = initializePage;
 })(window);
