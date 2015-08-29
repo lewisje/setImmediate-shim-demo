@@ -23,31 +23,27 @@ if (document.all && (!('getElementsByTagName' in document) ||
      (typeof document.getElementsByTagName !== 'function' &&
        (typeof document.getElementsByTagName !== 'object' || !document.getElementsByTagName)))) {
   document.getElementsByTagName = function (nodeName) {
-    'use strict';
-    var result, rightName, dal, i;
+    var result, rightName, i;
     if (nodeName === '*') return document.all;
     result = [];
     rightName = new RegExp(nodeName, 'i');
-    dal = document.all.length;
-    for (i = dal; i--;) if (rightName.test(document.all[i].nodeName)) result.push(document.all[i]);
+    for (i = document.all.length >>> 0; i--;) if (rightName.test(document.all[i].nodeName)) result.push(document.all[i]);
     return result;
   };
 }
 if (!('getElementsByClassName' in document) || (typeof document.getElementsByClassName !== 'function' &&
-      (typeof document.getElementsByClassName !== object || !document.getElementsByClassName))) { 
+      (typeof document.getElementsByClassName !== 'object' || !document.getElementsByClassName))) { 
   document.getElementsByClassName = function (className, nodeName) {
-    'use strict';
-    var result = [], tag = nodeName || '*', rightClass, node, seek, sl, i;
+    var result = [], tag = nodeName || '*', rightClass, node, seek, i;
     if ('evaluate' in document && (typeof document.evaluate === 'function' ||
          (typeof document.evaluate === 'object' && document.evaluate))) {
       seek = '//' + tag + '[@class="' + className + '"]';
       seek = document.evaluate(seek, document, null, 0, null);
-      while (node = seek.iterateNext()) result.push(node);
+      while ((node = seek.iterateNext())) result.push(node);
     } else {
       rightClass = new RegExp('(^| )' + className + '( |$)');
       seek = document.getElementsByTagName(tag);
-      sl = seek.length;
-      for (i = sl; i--;) if (rightClass.test((node = seek[i]).className)) result.push(seek[i]);
+      for (i = seek.length >>> 0; i--;) if (rightClass.test((node = seek[i]).className)) result.push(seek[i]);
     }
     return result;
   };
