@@ -1,6 +1,32 @@
 ;(function (global, undefined) {
 'use strict';
-var noNative, doc, slice, toString, timer, polyfill;
+var defineProperty = Object.defineProperty, defProps = (function () {
+    var //dom = document.createElement('div'), // Safari 5 doesn't support it on DOM nodes
+      obj = {}; // IE 8 only supports `Object.defineProperty` on DOM elements
+    try {defineProperty(obj, 'obj', obj); /*defineProperty(dom, 'obj', obj);*/ return 'obj' in obj/* && 'obj' in dom*/;}
+    catch (_) {/*dom = */obj = null; return false;}
+    finally {/*dom = */obj = null;}
+  })(), Mutation = global.MutationObserver || global.WebKitMutationObserver,
+  noNative, doc, slice, toString, timer, polyfill;
+if (!defProps) { // simple implementation of Object.defineProperty
+  defineProperty = function defineProperty(obj, key, attr) {
+    if ('value' in attr) obj[key] = attr.value;
+    else if ('get' in attr) obj[key] = attr['get'].call(obj);
+  };
+}
+function defineEnumData(obj, key, val) {
+  defineProperty(obj, key, {value: val, enumerable: true, configurable: true, writable: true});
+}
+function defineMethod(obj, key, func) {
+  defineProperty(obj, key, {value: func, configurable: true, writable: true});
+}
+function isCallable(fn) {
+  return typeof fn === 'function' || toString.call(fn) === '[object Function]' ||
+    typeof fn === 'unknown' || false; // 'unknown' means callable ActiveX in IE<9
+}
+function hasMethod(obj, key) {
+  return key in obj && isCallable(obj[key]);
+}
 // See http://codeforhire.com/2013/09/21/setimmediate-and-messagechannel-broken-on-internet-explorer-10/
 function notUseNative() {
   return global.navigator && /Trident/.test(global.navigator.userAgent);
@@ -10,7 +36,7 @@ function notUseNative() {
 function functionize(func, arg) {
   switch (typeof func) {
     case 'string':
-      return new Function(func, String(arg));
+      return new Function(String(arg), func);
     case 'function':
       return func;
     default:
@@ -53,12 +79,13 @@ timer.run = function (handleId) {
     }
   }
 };
-timer.wrap = function(handler) {
+timer.wrap = function (handler) {
   var args = slice.call(arguments, 1);
-  return function () {
+  function wrapped() {
     if (typeof handler === 'function') handler.apply(undefined, args);
     else functionize(String(handler))();
-  };
+  }
+  return wrapped;
 };
 timer.create = function(args) {
   timer.tasks[timer.nextId] = timer.wrap.apply(null, args);
@@ -72,39 +99,66 @@ timer.polyfill.messageChannel = function () {
   channel.port1.onmessage = function (event) {
     timer.run(Number(event.data));
   };
-  return function () {
+  function setImmediate() {
     var handleId = timer.create(arguments);
     channel.port2.postMessage(handleId);
     return handleId;
-  };
+  }
+  return setImmediate;
 };
 timer.polyfill.nextTick = function () {
-  return function () {
+  function setImmediate() {
     var handleId = timer.create(arguments);
     global.process.nextTick(timer.wrap(timer.run, handleId));
     return handleId;
-  };
+  }
+  return setImmediate;
 };
 timer.polyfill.postMessage = function () {
   var messagePrefix = 'setImmediate$' + Math.random() + '$',
     onGlobalMessage = function onGlobalMessage(event) {
-    if (event.source === global &&
-      typeof event.data === 'string' &&
-      event.data.indexOf(messagePrefix) === 0) {
-      timer.run(+event.data.slice(messagePrefix.length));
-    }
-  };
-  if (global.addEventListener) global.addEventListener('message', onGlobalMessage, false);
-  else global.attachEvent('onmessage', onGlobalMessage);
-  return function () {
+      if (event.source === global &&
+        typeof event.data === 'string' &&
+        event.data.indexOf(messagePrefix) === 0) {
+        timer.run(+event.data.slice(messagePrefix.length));
+      }
+    };
+  if (hasMethod(global, 'addEventListener')) global.addEventListener('message', onGlobalMessage, false);
+  else if (hasMethod(global, 'attachEvent')) global.attachEvent('onmessage', onGlobalMessage);
+  else throw new Error('No suitable event model.');
+  function setImmediate() {
     var handleId = timer.create(arguments);
     global.postMessage(messagePrefix + handleId, '*');
     return handleId;
-  };
+  }
+  return setImmediate;
+};
+// based on https://github.com/tildeio/rsvp.js/blob/master/lib/rsvp/asap.js
+timer.polyfill.mutation = function () {
+  var handleId = timer.create(arguments), called = 0,
+    obs = new Mutation(handleId), elt = doc.createTextNode('');
+  obs.observe(elt, {characterData: true});
+  function setImmediate() {
+    elt.data = (called = ++called % 2);
+  }
+  return setImmediate;
+};
+// based on https://github.com/Lcfvs/setImmediate/blob/master/setImmediate.js
+timer.polyfill.image = function () {
+  var src = '\0';
+  function setImmediate() {
+    var handleId = timer.create(arguments), image = new global.Image();
+    image.onerror = function () {
+      timer.run(handleId);
+    };
+    image.src = src;
+    return handleId;
+  }
+  return setImmediate;
 };
 timer.polyfill.readyStateChange = function () {
   var html = doc.documentElement;
-  return function () {
+  function setImmediate() {
     var handleId = timer.create(arguments),
       script = doc.createElement('script');
     script.onreadystatechange = function () {
@@ -115,17 +169,19 @@ timer.polyfill.readyStateChange = function () {
     };
     html.appendChild(script);
     return handleId;
-  };
+  }
+  return setImmediate;
 };
 timer.polyfill.setTimeout = function () {
-  return function () {
+  function setImmediate() {
     var handleId = timer.create(arguments);
     global.setTimeout(timer.wrap(timer.run, handleId), 1);
     return handleId;
-  };
+  }
+  return setImmediate;
 };
 function canUsePostMessage() {
-  if (global.postMessage && !global.importScripts) {
+  if (hasMethod(global, 'postMessage') && !hasMethod(global, 'importScripts')) {
     var asynch = true, oldOnMessage = global.onmessage;
     global.onmessage = function () {
       asynch = false;
@@ -141,17 +197,22 @@ if (toString.call(global.process) === '[object process]') polyfill = 'nextTick';
 // For non-IE10 modern browsers
 else if (canUsePostMessage()) polyfill = 'postMessage';
 // For web workers, where supported
-else if (!noNative && global.MessageChannel) polyfill = 'messageChannel';
-// For IE 6–8
-else if (doc && ('onreadystatechange' in doc.createElement('script'))) polyfill = 'readyStateChange';
+else if (!noNative && 'MessageChannel' in global) polyfill = 'messageChannel';
+// For IE11, probably
+else if (Mutation) polyfill = 'mutation';
+// For IE 6-8, maybe older browsers
+else if (doc && hasMethod(global, 'Image')) polyfill = 'image';
+// For IE 6–8, in case image doesn't work
+else if (doc && 'onreadystatechange' in doc.createElement('script')) polyfill = 'readyStateChange';
 // For older browsers
 else polyfill = 'setTimeout';
 // If supported, we should attach to the prototype of global,
 // since that is where setTimeout et al. live.
-var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-attachTo.setImmediate = timer.polyfill[polyfill]();
-attachTo.setImmediate.usepolyfill = polyfill;
-attachTo.msSetImmediate = attachTo.setImmediate;
-attachTo.clearImmediate = attachTo.msClearImmediate = timer.clear;
+var attachTo = hasMethod(Object, 'getPrototypeOf') && Object.getPrototypeOf(global);
+attachTo = attachTo && hasMethod(attachTo, 'setTimeout') ? attachTo : global;
+defineMethod(attachTo, 'setImmediate', timer.polyfill[polyfill]());
+defineEnumData(attachTo.setImmediate, 'usepolyfill', polyfill);
+defineMethod(attachTo, 'msSetImmediate', attachTo.setImmediate);
+defineMethod(attachTo, 'clearImmediate', timer.clear);
+defineMethod(attachTo, 'msClearImmediate', attachTo.clearImmediate);
 })(function(){return this||(1,eval)('this');}());
