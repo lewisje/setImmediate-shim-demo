@@ -202,8 +202,8 @@ else if (canUsePostMessage()) polyfill = 'postMessage';
 else if (!noNative && 'MessageChannel' in global) polyfill = 'messageChannel';
 // not sure what environment uses this
 else if (Mutation) polyfill = 'mutation';
-// For IE 8, maybe older browsers
-else if (doc && hasMethod(global, 'Image') && typeof doc.body.querySelector === 'object') polyfill = 'image';
+// For IE 8, maybe older browsers (actually inferior to readystatechange)
+//else if (doc && hasMethod(global, 'Image') && typeof doc.body.querySelector === 'object') polyfill = 'image';
 // For IE 6–7, in case image doesn't work
 else if (doc && 'onreadystatechange' in doc.createElement('script')) polyfill = 'readyStateChange';
 // For older browsers
