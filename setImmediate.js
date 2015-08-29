@@ -146,7 +146,7 @@ timer.polyfill.mutation = function () {
 // based on https://github.com/Lcfvs/setImmediate/blob/master/setImmediate.js
 timer.polyfill.image = function () {
   var src = '\0';
-  src = 'gif.gif'; // https://github.com/mathiasbynens/small/blob/master/gif.gif
+  src = 'blank.gif'; // https://github.com/mathiasbynens/small/blob/master/gif.gif
   function setImmediate() {
     var handleId = timer.create(arguments), image = new global.Image();
     image.onload =
